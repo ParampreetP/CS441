@@ -1,0 +1,12 @@
+mario.png
+size: 840, 720
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+mario
+  rotate: false
+  xy: 0, 0
+  size: 840, 720
+  orig: 840, 720
+  offset: 0, 0
+  index: -1

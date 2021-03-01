@@ -2,9 +2,9 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
-
+//https://stackoverflow.com/questions/42071541/how-to-make-a-texture-jump-up-and-return-to-starting-position-android-java-lib
 public class Ball {
-    public static final float GRAVITY = -100; // size depends on  world scale
+    public static final float GRAVITY = -100;
     public static final float BOUNCE_DAMPENING = 0.6f;
 
     public final Vector2 position = new Vector2();

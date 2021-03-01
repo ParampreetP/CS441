@@ -17,21 +17,21 @@ public class customdrawing extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		background = new Texture("background.png");
 		mario = new Texture("mario.png");
+
 		ball = new Ball();
 	}
 
 	@Override
 	public void render () {
-
+		Gdx.gl.glClearColor(0, 0, 0, 1);
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		if (Gdx.input.justTouched())
 			ball.velocity.y += 100;
 		ball.update();
 		batch.begin();
 
-
 		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-		batch.draw(mario, ball.position.x, ball.position.y, mario.getWidth(), mario.getHeight() );
+		batch.draw(mario, ball.position.x + 140, ball.position.y + 140, mario.getWidth() , mario.getHeight()  );
 
 		batch.end();
 	}
