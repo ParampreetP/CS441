@@ -10,6 +10,7 @@ public class customdrawing extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture background;
 	Texture mario;
+	Texture browser;
 	Ball ball;
 
 	@Override
@@ -17,7 +18,7 @@ public class customdrawing extends ApplicationAdapter {
 		batch = new SpriteBatch();
 		background = new Texture("background.png");
 		mario = new Texture("mario.png");
-
+		browser = new Texture("browser.png");
 		ball = new Ball();
 	}
 
@@ -34,8 +35,14 @@ public class customdrawing extends ApplicationAdapter {
 
 		batch.draw(background, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.draw(mario, ball.position.x + 140, ball.position.y + 140, mario.getWidth()/6 , mario.getHeight()/6  );
+		batch.draw(browser,900,140, browser.getWidth(), browser.getHeight() );
+
 
 		batch.end();
+		if (((ball.position.x >= 700) && (ball.position.x <= 950)) && ((ball.position.y >= 0) && (ball.position.y <= 400))){
+			ball.position.x = 140;
+			ball.position.y = 140;
+		}
 	}
 	
 	@Override
@@ -44,5 +51,6 @@ public class customdrawing extends ApplicationAdapter {
 		batch.dispose();
 		background.dispose();
 		mario.dispose();
+		browser.dispose();
 	}
 }
