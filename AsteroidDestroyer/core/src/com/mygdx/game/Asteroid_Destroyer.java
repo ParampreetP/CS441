@@ -6,6 +6,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
+import static sun.misc.Version.println;
+
 public class Asteroid_Destroyer extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture ship, stars;
@@ -29,8 +31,10 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	@Override
 	public void render () {
 		batch.begin();
+
 		batch.draw(stars, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 		batch.draw(ship, shipX, shipY, shipW, shipH);
+		shipMove();
 
 
 		batch.end();
@@ -42,4 +46,21 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		stars.dispose();
 		ship.dispose();
 	}
+
+	public void shipMove(){
+		float accelerometerX  = Gdx.input.getAccelerometerX();
+		if (accelerometerX  > 0){
+			shipX = shipX -2;
+			if (shipX == 0){
+				shipX = shipX +2;
+			}
+		} else if(accelerometerX  < 0){
+			shipX = shipX +2;
+			if (shipX == Gdx.graphics.getWidth() - shipW){
+				shipX = shipX -2;
+			}
+		}
+	}
+
+
 }
