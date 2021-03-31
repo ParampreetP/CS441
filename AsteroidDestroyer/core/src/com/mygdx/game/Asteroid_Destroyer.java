@@ -2,9 +2,11 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 
 import java.util.Random;
 
@@ -21,6 +23,8 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	float[] astsY = new float[nAst];
 	float[][] astsX = new float[6][nAst];
 
+	ShapeRenderer shape;
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();
@@ -34,6 +38,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		ast5 = new Texture("asteroid.png");
 		ast6 = new Texture("asteroid.png");
 
+		shape = new ShapeRenderer();
 
 		shipW = Gdx.graphics.getWidth()/6;
 		shipH = Gdx.graphics.getHeight()/10;
@@ -105,8 +110,20 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			batch.draw(ast5, astsX[4][i], astsY[i], shipW, shipH);
 			batch.draw(ast6, astsX[5][i], astsY[i], shipW, shipH);
 
-		}
 
+		}
+		shape.begin(ShapeRenderer.ShapeType.Filled);
+		for (int i = 0; i <nAst; i++) {
+			shape.setColor(Color.BLUE);
+			shape.circle(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
+			shape.circle(astsX[1][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
+			shape.circle(astsX[2][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
+			shape.circle(astsX[3][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
+			shape.circle(astsX[4][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
+			shape.circle(astsX[5][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
+			shape.circle(shipX + shipW/2, shipY + shipH/2, shipW / 2);
+		}
+		shape.end();
 
 
 		batch.end();
