@@ -7,6 +7,8 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Circle;
+import com.badlogic.gdx.math.Intersector;
 
 import java.util.Random;
 
@@ -24,6 +26,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	float[][] astsX = new float[6][nAst];
 
 	ShapeRenderer shape;
+	Circle c_ship, c_ast1[], c_ast2[], c_ast3[], c_ast4[], c_ast5[], c_ast6[];
 
 	@Override
 	public void create () {
@@ -39,6 +42,13 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		ast6 = new Texture("asteroid.png");
 
 		shape = new ShapeRenderer();
+		c_ship = new Circle();
+		c_ast1 = new Circle[nAst];
+		c_ast2 = new Circle[nAst];
+		c_ast3 = new Circle[nAst];
+		c_ast4 = new Circle[nAst];
+		c_ast5 = new Circle[nAst];
+		c_ast6 = new Circle[nAst];
 
 		shipW = Gdx.graphics.getWidth()/6;
 		shipH = Gdx.graphics.getHeight()/10;
@@ -69,6 +79,13 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			astsX[3][i] = r4.nextFloat() * Gdx.graphics.getHeight();
 			astsX[4][i] = r5.nextFloat() * Gdx.graphics.getHeight();
 			astsX[5][i] = r6.nextFloat() * Gdx.graphics.getHeight();
+
+			c_ast1[i] = new Circle();
+			c_ast2[i] = new Circle();
+			c_ast3[i] = new Circle();
+			c_ast4[i] = new Circle();
+			c_ast5[i] = new Circle();
+			c_ast6[i] = new Circle();
 
 		}
 
@@ -112,18 +129,32 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 
 		}
-		shape.begin(ShapeRenderer.ShapeType.Filled);
+		c_ship.set(shipX + shipW/2, shipY + shipH/2, shipW / 2);
+		//shape.begin(ShapeRenderer.ShapeType.Filled);
 		for (int i = 0; i <nAst; i++) {
-			shape.setColor(Color.BLUE);
+
+			/*shape.setColor(Color.BLUE);
 			shape.circle(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
 			shape.circle(astsX[1][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
 			shape.circle(astsX[2][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
 			shape.circle(astsX[3][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
 			shape.circle(astsX[4][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
 			shape.circle(astsX[5][i] + shipW/2, astsY[i]+ shipH/2, shipW / 2);
-			shape.circle(shipX + shipW/2, shipY + shipH/2, shipW / 2);
+			shape.circle(shipX + shipW/2, shipY + shipH/2, shipW / 2);*/
+
+			c_ast1[i].set(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
+			c_ast2[i].set(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
+			c_ast3[i].set(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
+			c_ast4[i].set(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
+			c_ast5[i].set(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
+			c_ast6[i].set(astsX[0][i] + shipW/2, astsY[i] + shipH/2, shipW / 2);
+
+			if (Intersector.overlaps(c_ship, c_ast1[i]) || Intersector.overlaps(c_ship, c_ast2[i]) ||Intersector.overlaps(c_ship, c_ast3[i]) || Intersector.overlaps(c_ship, c_ast4[i]) || Intersector.overlaps(c_ship, c_ast5[i]) || Intersector.overlaps(c_ship, c_ast6[i])){
+				//todo
+			}
+
 		}
-		shape.end();
+		//shape.end();
 
 
 		batch.end();
