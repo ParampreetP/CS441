@@ -22,17 +22,20 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.awt.Font;
+import java.awt.Label;
 import java.util.Random;
 
 import static sun.misc.Version.println;
 
 public class Asteroid_Destroyer extends ApplicationAdapter {
 	SpriteBatch batch;
-	Texture ship, stars, gameOver;
+	Texture ship, stars, gameOver, stars1;
 	Texture ast1, ast2, ast3, ast4, ast5, ast6;
 	float shipH, shipW, shipX, shipY;
 	float astY, ast1X, ast2X, ast3X, ast4X, ast5X, ast6X;
@@ -67,10 +70,9 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	private ImageButton instrButton;
 	private ImageButton backButton;
 
-
-
-
 	boolean flag = false;
+	private BitmapFont instrFont;
+
 
 	@Override
 	public void create () {
@@ -154,6 +156,11 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		stage.addActor(instrButton);
 		Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
+		//instrFont = new BitmapFont();
+		//instrFont.setColor(Color.RED);
+		//instrFont.getData().setScale(5);
+
+
 
 	}
 
@@ -162,9 +169,12 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		batch.begin();
 
 
+
 		if (currentScreen == Screen.TITLE) {
+
 			stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
 			stage.draw();
+
 
 			gameButton.addListener(new EventListener() {//start button
 				@Override
@@ -217,7 +227,6 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 
 		} else if (currentScreen == Screen.MAIN_GAME) {
-
 
 			batch.draw(stars, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			batch.draw(ship, shipX, shipY, shipW, shipH);
@@ -292,23 +301,43 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 
 
-		} else if (currentScreen == Screen.INSTR_SCREEN){
-			batch.draw(stars, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-			instrButton.remove();
-			gameButton.remove();
-			stage.addActor(backButton);
-			stage.draw();
-			backButton.draw(batch, 1);
+		} else if(currentScreen == Screen.INSTR_SCREEN){
+			stars1 = new Texture("star.png");
+			batch.draw(stars1, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-			backButton.addListener(new EventListener() {
+			instrFont = new BitmapFont();
+			instrFont.setColor(Color.RED);
+			instrFont.getData().setScale(5);
+			//Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);//clear buffer
+			instrFont.draw(batch, "Welcome To Asteroids Destroyer \n Dodge the Incoming Missiles \n Tilt Your Screen Left or Right \n To Move The Ship. Try to Get \n" +
+							"the Highest Score! Collect \n Points by dodging Asteroids\n  \n  \n Asteroids destroyer Created \n By Parampreet Parmar",
+					Gdx.graphics.getWidth()/25 , Gdx.graphics.getHeight()/2+Gdx.graphics.getHeight()/4);
+
+
+			//stage.addActor(backButton);
+			//instrButton.remove();
+			//gameButton.remove();
+			//stage.draw();
+			//backButton.draw(batch, 0);
+
+			/*backButton.addListener(new EventListener() {
 				@Override
 				public boolean handle(Event event) {
-					//todo
+					stars.dispose();
+					currentScreen = Screen.TITLE;
 					//go back to main menu
 					return false;
 				}
-			});
-
+			});*/
+			if (Gdx.input.justTouched()){{
+				stars1.dispose();
+				instrFont.dispose();
+				//backButton.remove();
+				//stage.addActor(gameButton);
+				//stage.addActor(instrButton);
+				//stage.draw();
+				currentScreen = Screen.TITLE;
+			}}
 
 		}
 		batch.end();
