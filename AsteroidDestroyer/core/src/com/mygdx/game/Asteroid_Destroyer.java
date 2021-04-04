@@ -75,6 +75,11 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	boolean flag = false;
 	private BitmapFont instrFont;
 
+	int score = 0;
+	BitmapFont scoreFont;
+	boolean flag1 = true;
+
+
 
 	@Override
 	public void create () {
@@ -169,6 +174,11 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		//instrFont.setColor(Color.RED);
 		//instrFont.getData().setScale(5);
 
+		scoreFont = new BitmapFont();
+		scoreFont.setColor(Color.RED);
+		scoreFont.getData().setScale(8);
+
+
 
 
 	}
@@ -246,9 +256,11 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			stage.clear();
 			batch.draw(stars, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			batch.draw(ship, shipX, shipY, shipW, shipH);
+
 			shipMove();
 			for (int i = 0; i < nAst; i++) {
 				if (astsY[i] < shipY) {
+					flag1 = true;
 					astsY[i] = Gdx.graphics.getHeight() + i * shipH;
 					Random r1 = new Random();
 					Random r2 = new Random();
@@ -263,6 +275,14 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 					astsX[3][i] = r4.nextFloat() * Gdx.graphics.getHeight();
 					astsX[4][i] = r5.nextFloat() * Gdx.graphics.getHeight();
 					astsX[5][i] = r6.nextFloat() * Gdx.graphics.getHeight();
+				}
+				scoreFont.draw(batch,String.valueOf(score),Gdx.graphics.getWidth() - shipW, astY);
+
+				if(shipY<astsY[i] && flag1){
+					score++;
+					System.out.println(score);
+					flag1 = false;
+
 				}
 
 				astsY[i] = astsY[i] - 5;
@@ -307,6 +327,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			//shape.end();
 
 		} else if (currentScreen == Screen.GAME_OVER){
+				score = 0;
 				gameOver = new Texture("gameover.png");
 				batch.draw(gameOver,0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
