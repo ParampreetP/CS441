@@ -36,6 +36,7 @@ import static sun.misc.Version.println;
 public class Asteroid_Destroyer extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture ship, stars, gameOver, stars1;
+	Texture logo;
 	Texture ast1, ast2, ast3, ast4, ast5, ast6;
 	float shipH, shipW, shipX, shipY;
 	float astY, ast1X, ast2X, ast3X, ast4X, ast5X, ast6X;
@@ -62,10 +63,11 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	private TextureRegion myTextureRegion;
 	private TextureRegion myTextureRegion2;
 	private TextureRegion myTextureRegion3;
-
+	private TextureRegion myTextureRegion4;
 	private TextureRegionDrawable myTexRegionDrawable;
 	private TextureRegionDrawable myTexRegionDrawable2;
 	private TextureRegionDrawable myTexRegionDrawable3;
+	private TextureRegionDrawable myTexRegionDrawable4;
 	private ImageButton gameButton;
 	private ImageButton instrButton;
 	private ImageButton backButton;
@@ -86,6 +88,9 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		ast4 = new Texture("asteroid.png");
 		ast5 = new Texture("asteroid.png");
 		ast6 = new Texture("asteroid.png");
+
+		logo = new Texture("logo.png");
+
 
 		shape = new ShapeRenderer();
 		c_ship = new Circle();
@@ -141,15 +146,19 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		myTextureRegion = new TextureRegion(playTexture);
 		myTextureRegion2 = new TextureRegion(InstrTexture);
 		myTextureRegion3 = new TextureRegion(backTexture);
+		//myTextureRegion4 = new TextureRegion(logo);
 		myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 		myTexRegionDrawable2 = new TextureRegionDrawable(myTextureRegion2);
 		myTexRegionDrawable3 = new TextureRegionDrawable(myTextureRegion3);
+		//myTexRegionDrawable4 = new TextureRegionDrawable(myTextureRegion4);
 		gameButton = new ImageButton(myTexRegionDrawable); //Set the button up
 		instrButton = new ImageButton(myTexRegionDrawable2);
 		backButton = new ImageButton(myTexRegionDrawable3);
+
 		gameButton.setPosition(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/2);
-		instrButton.setPosition(Gdx.graphics.getWidth()/7, Gdx.graphics.getHeight()/4);
+		instrButton.setPosition(Gdx.graphics.getWidth()/7, Gdx.graphics.getHeight()/3);
 		backButton.setPosition(0,0);
+
 		backButton.setSize(shipW, shipH);
 		stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 		stage.addActor(gameButton); //Add the button to the stage to perform rendering and take input.
@@ -167,13 +176,19 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	@Override
 	public void render () {
 		batch.begin();
-
+		Gdx.graphics.getGL20().glEnable(GL20.GL_BLEND);
+		Gdx.gl.glBlendFunc(GL20.GL_SRC_ALPHA, GL20.GL_ONE_MINUS_SRC_ALPHA);
+		batch.draw(stars, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+		batch.draw(logo, Gdx.graphics.getWidth()/6 , Gdx.graphics.getHeight()/2 + Gdx.graphics.getHeight()/4);
 
 
 		if (currentScreen == Screen.TITLE) {
 
-			stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logic
+			stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logicAsteroid Destroyer
+
 			stage.draw();
+
+
 
 
 			gameButton.addListener(new EventListener() {//start button
@@ -228,6 +243,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 		} else if (currentScreen == Screen.MAIN_GAME) {
 
+			stage.clear();
 			batch.draw(stars, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 			batch.draw(ship, shipX, shipY, shipW, shipH);
 			shipMove();
@@ -282,6 +298,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 				if (Intersector.overlaps(c_ship, c_ast1[i]) || Intersector.overlaps(c_ship, c_ast2[i]) || Intersector.overlaps(c_ship, c_ast3[i]) || Intersector.overlaps(c_ship, c_ast4[i]) || Intersector.overlaps(c_ship, c_ast5[i]) || Intersector.overlaps(c_ship, c_ast6[i])) {
 					currentScreen = Screen.GAME_OVER;
+
 					flag = true;
 
 				}
@@ -295,6 +312,9 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 				if (Gdx.input.justTouched()){
 					gameOver.dispose();
+					stage.addActor(gameButton); //Add the button to the stage to perform rendering and take input.
+					stage.addActor(instrButton);
+					stage.draw();
 					currentScreen = Screen.TITLE;
 
 				}
@@ -302,6 +322,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 
 		} else if(currentScreen == Screen.INSTR_SCREEN){
+
 			stars1 = new Texture("star.png");
 			batch.draw(stars1, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
