@@ -3,6 +3,7 @@ package com.mygdx.game;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -49,7 +50,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	Circle c_ship, c_ast1[], c_ast2[], c_ast3[], c_ast4[], c_ast5[], c_ast6[];
 
 	enum Screen{
-		TITLE, MAIN_GAME, GAME_OVER, INSTR_SCREEN;
+		TITLE, MAIN_GAME, GAME_OVER, INSTR_SCREEN, LEADERBOARD;
 	}
 
 	Screen currentScreen = Screen.TITLE;
@@ -58,7 +59,8 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	private Stage stage;
 	private Texture playTexture;
 	private Texture InstrTexture;
-	private Texture backTexture;
+	//private Texture backTexture;
+	private Texture trophyTexture;
 
 	private TextureRegion myTextureRegion;
 	private TextureRegion myTextureRegion2;
@@ -70,14 +72,18 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	private TextureRegionDrawable myTexRegionDrawable4;
 	private ImageButton gameButton;
 	private ImageButton instrButton;
-	private ImageButton backButton;
+	//private ImageButton backButton;
+	private ImageButton trophyButton;
 
 	boolean flag = false;
 	private BitmapFont instrFont;
 
-	int score = 0;
+	private int score = 0;
 	BitmapFont scoreFont;
-	boolean flag1 = true;
+	boolean flag1;
+
+	Preferences preferences;
+	private int highScore;
 
 
 
@@ -147,27 +153,32 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 		playTexture = new Texture(Gdx.files.internal("play.png"));
 		InstrTexture = new Texture(Gdx.files.internal("instruction.png"));
-		backTexture = new Texture(Gdx.files.internal("back.png"));
+		//backTexture = new Texture(Gdx.files.internal("back.png"));
+		trophyTexture = new Texture("trophy.png");
 		myTextureRegion = new TextureRegion(playTexture);
 		myTextureRegion2 = new TextureRegion(InstrTexture);
-		myTextureRegion3 = new TextureRegion(backTexture);
-		//myTextureRegion4 = new TextureRegion(logo);
+		//myTextureRegion3 = new TextureRegion(backTexture);
+		myTextureRegion4 = new TextureRegion(trophyTexture);
 		myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 		myTexRegionDrawable2 = new TextureRegionDrawable(myTextureRegion2);
-		myTexRegionDrawable3 = new TextureRegionDrawable(myTextureRegion3);
-		//myTexRegionDrawable4 = new TextureRegionDrawable(myTextureRegion4);
+		//myTexRegionDrawable3 = new TextureRegionDrawable(myTextureRegion3);
+		myTexRegionDrawable4 = new TextureRegionDrawable(myTextureRegion4);
 		gameButton = new ImageButton(myTexRegionDrawable); //Set the button up
 		instrButton = new ImageButton(myTexRegionDrawable2);
-		backButton = new ImageButton(myTexRegionDrawable3);
+		//backButton = new ImageButton(myTexRegionDrawable3);
+		trophyButton = new ImageButton(myTexRegionDrawable4);
 
 		gameButton.setPosition(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/2);
 		instrButton.setPosition(Gdx.graphics.getWidth()/7, Gdx.graphics.getHeight()/3);
-		backButton.setPosition(0,0);
+		trophyButton.setPosition(Gdx.graphics.getWidth()/2 - shipW, Gdx.graphics.getHeight()/9);
+		//backButton.setPosition(0,0);
 
-		backButton.setSize(shipW, shipH);
+		//backButton.setSize(shipW, shipH);
+		trophyButton.setSize(shipW*2, shipH*2);
 		stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 		stage.addActor(gameButton); //Add the button to the stage to perform rendering and take input.
 		stage.addActor(instrButton);
+		stage.addActor(trophyButton);
 		Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
 		//instrFont = new BitmapFont();
@@ -177,9 +188,9 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		scoreFont = new BitmapFont();
 		scoreFont.setColor(Color.RED);
 		scoreFont.getData().setScale(8);
-
-
-
+		score = 0;
+		preferences = Gdx.app.getPreferences("My Preferences");
+		//highScore = 0;
 
 	}
 
@@ -197,8 +208,6 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			stage.act(Gdx.graphics.getDeltaTime()); //Perform ui logicAsteroid Destroyer
 
 			stage.draw();
-
-
 
 
 			gameButton.addListener(new EventListener() {//start button
@@ -246,6 +255,14 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 				@Override
 				public boolean handle(Event event) {
 					currentScreen = Screen.INSTR_SCREEN;
+					return false;
+				}
+			});
+
+			trophyButton.addListener(new EventListener() {
+				@Override
+				public boolean handle(Event event) {
+					currentScreen = Screen.LEADERBOARD;
 					return false;
 				}
 			});
@@ -317,8 +334,10 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 				c_ast6[i].set(astsX[5][i] + shipW / 2, astsY[i] + shipH / 2, shipW / 2);
 
 				if (Intersector.overlaps(c_ship, c_ast1[i]) || Intersector.overlaps(c_ship, c_ast2[i]) || Intersector.overlaps(c_ship, c_ast3[i]) || Intersector.overlaps(c_ship, c_ast4[i]) || Intersector.overlaps(c_ship, c_ast5[i]) || Intersector.overlaps(c_ship, c_ast6[i])) {
-					currentScreen = Screen.GAME_OVER;
+					preferences.putInteger("HighScore", score);
+					preferences.flush();
 
+					currentScreen = Screen.GAME_OVER;
 					flag = true;
 
 				}
@@ -335,6 +354,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 					gameOver.dispose();
 					stage.addActor(gameButton); //Add the button to the stage to perform rendering and take input.
 					stage.addActor(instrButton);
+					stage.addActor(trophyButton);
 					stage.draw();
 					currentScreen = Screen.TITLE;
 
@@ -378,6 +398,24 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 				//stage.addActor(gameButton);
 				//stage.addActor(instrButton);
 				//stage.draw();
+				currentScreen = Screen.TITLE;
+			}}
+
+		} else if (currentScreen == Screen.LEADERBOARD){
+			if (preferences.getInteger("HighScore", 0) > highScore) {
+				highScore = preferences.getInteger("HighScore", 0);
+				// bulk update preferences
+				preferences.flush();
+			}
+			instrFont = new BitmapFont();
+			instrFont.setColor(Color.RED);
+			instrFont.getData().setScale(8);
+			instrFont.draw(batch, "Your HighScore", 0+shipW, Gdx.graphics.getHeight()/2);
+			instrFont.draw(batch, "\n" + highScore, Gdx.graphics.getWidth()/2 , Gdx.graphics.getHeight()/2);
+			//System.out.println(highScore);
+
+			if (Gdx.input.justTouched()){{
+				instrFont.dispose();
 				currentScreen = Screen.TITLE;
 			}}
 
