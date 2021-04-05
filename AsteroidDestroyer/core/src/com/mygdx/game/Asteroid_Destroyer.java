@@ -38,9 +38,11 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	SpriteBatch batch;
 	Texture ship, stars, gameOver, stars1;
 	Texture logo;
+	//Texture missile;
 	Texture ast1, ast2, ast3, ast4, ast5, ast6;
 	float shipH, shipW, shipX, shipY;
 	float astY, ast1X, ast2X, ast3X, ast4X, ast5X, ast6X;
+	float missileY;
 
 	int nAst = 6;
 	float[] astsY = new float[nAst];
@@ -101,6 +103,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		ast6 = new Texture("asteroid.png");
 
 		logo = new Texture("logo.png");
+		//missile = new Texture("missile.png");
 
 
 		shape = new ShapeRenderer();
@@ -119,11 +122,12 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 		astY = Gdx.graphics.getHeight() - shipW;
 		ast1X = Gdx.graphics.getWidth()/2;
-		ast2X = Gdx.graphics.getWidth()/2 + 200;
-		ast3X = Gdx.graphics.getWidth()/2 + 400;
-		ast4X = Gdx.graphics.getWidth()/2 - 200;
-		ast5X = Gdx.graphics.getWidth()/2 - 450;
-		ast6X = Gdx.graphics.getWidth()/2 - 650;
+		ast2X = Gdx.graphics.getWidth()/2 + shipH;
+		ast3X = Gdx.graphics.getWidth()/2 + shipH*2;
+		ast4X = Gdx.graphics.getWidth()/2 - shipH*3;
+		ast5X = Gdx.graphics.getWidth()/2 - shipH*2;
+		ast6X = Gdx.graphics.getWidth()/2 - shipH*3;
+		//missileY = Gdx.graphics.getWidth()/10;
 
 		for (int i = 0; i < nAst; i++){
 			astsY[i] = Gdx.graphics.getHeight()+i * shipH;
@@ -219,7 +223,8 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 						shipY = Gdx.graphics.getWidth()/10;
 
 						for (int i = 0; i < nAst; i++){
-							astsY[i] = Gdx.graphics.getHeight()+i * shipH;
+							astsY[i] = Gdx.graphics.getHeight()+i*shipH*4;
+							//Gdx.graphics.getHeight()+i * shipH;
 							//Gdx.graphics.getHeight()+i * Gdx.graphics.getHeight()/2;
 							Random r1 = new Random();
 							Random r2 = new Random();
@@ -278,7 +283,8 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			for (int i = 0; i < nAst; i++) {
 				if (astsY[i] < shipY) {
 					flag1 = true;
-					astsY[i] = Gdx.graphics.getHeight() + i * shipH;
+					astsY[i] = Gdx.graphics.getHeight()+i*shipH*4;
+					// Gdx.graphics.getHeight() + i * shipH;
 					Random r1 = new Random();
 					Random r2 = new Random();
 					Random r3 = new Random();
@@ -302,7 +308,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 				}
 
-				astsY[i] = astsY[i] - 5;
+				astsY[i] = astsY[i] - 6;
 				batch.draw(ast1, astsX[0][i], astsY[i], shipW, shipH);
 				batch.draw(ast2, astsX[1][i], astsY[i], shipW, shipH);
 				batch.draw(ast3, astsX[2][i], astsY[i], shipW, shipH);
@@ -336,21 +342,34 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 				if (Intersector.overlaps(c_ship, c_ast1[i]) || Intersector.overlaps(c_ship, c_ast2[i]) || Intersector.overlaps(c_ship, c_ast3[i]) || Intersector.overlaps(c_ship, c_ast4[i]) || Intersector.overlaps(c_ship, c_ast5[i]) || Intersector.overlaps(c_ship, c_ast6[i])) {
 					preferences.putInteger("HighScore", score);
 					preferences.flush();
-
 					currentScreen = Screen.GAME_OVER;
 					flag = true;
 
 				}
+				/*
+				if (Gdx.input.justTouched()){
+					batch.draw(missile, shipX, missileY, shipW, shipH);
+					if (missileY < astY){
+						missileY--;
+					}
+
+
+				}*/
 
 			}
 			//shape.end();
 
+
 		} else if (currentScreen == Screen.GAME_OVER){
-				score = 0;
+
 				gameOver = new Texture("gameover.png");
 				batch.draw(gameOver,0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
+				instrFont = new BitmapFont();
+				instrFont.setColor(Color.RED);
+				instrFont.getData().setScale(8);
+				instrFont.draw(batch, "Your Score: " +" " + score, 0+shipW, Gdx.graphics.getHeight()/3);
 				if (Gdx.input.justTouched()){
+					score = 0;
 					gameOver.dispose();
 					stage.addActor(gameButton); //Add the button to the stage to perform rendering and take input.
 					stage.addActor(instrButton);
@@ -434,7 +453,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 	public void shipMove(){
 		float accelerometerX  = Gdx.input.getAccelerometerX();
-		int speed = 4;
+		int speed = 5;
 		if (accelerometerX  > 0){
 			shipX = shipX - speed;
 			if (shipX == 0){
