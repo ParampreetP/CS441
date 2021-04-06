@@ -42,9 +42,9 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	Texture ast1, ast2, ast3, ast4, ast5, ast6;
 	float shipH, shipW, shipX, shipY;
 	float astY, ast1X, ast2X, ast3X, ast4X, ast5X, ast6X;
-	float missileY;
+	//float missileY;
 
-	int nAst = 6;
+	int nAst = 6; //Number of asteroids
 	float[] astsY = new float[nAst];
 	float[][] astsX = new float[6][nAst];
 
@@ -61,7 +61,6 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	private Stage stage;
 	private Texture playTexture;
 	private Texture InstrTexture;
-	//private Texture backTexture;
 	private Texture trophyTexture;
 
 	private TextureRegion myTextureRegion;
@@ -74,7 +73,6 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	private TextureRegionDrawable myTexRegionDrawable4;
 	private ImageButton gameButton;
 	private ImageButton instrButton;
-	//private ImageButton backButton;
 	private ImageButton trophyButton;
 
 	boolean flag = false;
@@ -85,7 +83,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 	boolean flag1;
 
 	Preferences preferences;
-	private int highScore;
+	int highScore;
 
 
 
@@ -157,27 +155,20 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 		playTexture = new Texture(Gdx.files.internal("play.png"));
 		InstrTexture = new Texture(Gdx.files.internal("instruction.png"));
-		//backTexture = new Texture(Gdx.files.internal("back.png"));
 		trophyTexture = new Texture("trophy.png");
 		myTextureRegion = new TextureRegion(playTexture);
 		myTextureRegion2 = new TextureRegion(InstrTexture);
-		//myTextureRegion3 = new TextureRegion(backTexture);
 		myTextureRegion4 = new TextureRegion(trophyTexture);
 		myTexRegionDrawable = new TextureRegionDrawable(myTextureRegion);
 		myTexRegionDrawable2 = new TextureRegionDrawable(myTextureRegion2);
-		//myTexRegionDrawable3 = new TextureRegionDrawable(myTextureRegion3);
 		myTexRegionDrawable4 = new TextureRegionDrawable(myTextureRegion4);
 		gameButton = new ImageButton(myTexRegionDrawable); //Set the button up
 		instrButton = new ImageButton(myTexRegionDrawable2);
-		//backButton = new ImageButton(myTexRegionDrawable3);
 		trophyButton = new ImageButton(myTexRegionDrawable4);
 
 		gameButton.setPosition(Gdx.graphics.getWidth()/6, Gdx.graphics.getHeight()/2);
 		instrButton.setPosition(Gdx.graphics.getWidth()/7, Gdx.graphics.getHeight()/3);
 		trophyButton.setPosition(Gdx.graphics.getWidth()/2 - shipW, Gdx.graphics.getHeight()/9);
-		//backButton.setPosition(0,0);
-
-		//backButton.setSize(shipW, shipH);
 		trophyButton.setSize(shipW*2, shipH*2);
 		stage = new Stage(new ScreenViewport()); //Set up a stage for the ui
 		stage.addActor(gameButton); //Add the button to the stage to perform rendering and take input.
@@ -185,16 +176,13 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 		stage.addActor(trophyButton);
 		Gdx.input.setInputProcessor(stage); //Start taking input from the ui
 
-		//instrFont = new BitmapFont();
-		//instrFont.setColor(Color.RED);
-		//instrFont.getData().setScale(5);
-
 		scoreFont = new BitmapFont();
 		scoreFont.setColor(Color.RED);
 		scoreFont.getData().setScale(8);
 		score = 0;
+
 		preferences = Gdx.app.getPreferences("My Preferences");
-		//highScore = 0;
+
 
 	}
 
@@ -223,9 +211,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 						shipY = Gdx.graphics.getWidth()/10;
 
 						for (int i = 0; i < nAst; i++){
-							astsY[i] = Gdx.graphics.getHeight()+i*shipH*4;
-							//Gdx.graphics.getHeight()+i * shipH;
-							//Gdx.graphics.getHeight()+i * Gdx.graphics.getHeight()/2;
+							astsY[i] = Gdx.graphics.getHeight()+i*shipH*6;
 							Random r1 = new Random();
 							Random r2 = new Random();
 							Random r3 = new Random();
@@ -283,8 +269,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			for (int i = 0; i < nAst; i++) {
 				if (astsY[i] < shipY) {
 					flag1 = true;
-					astsY[i] = Gdx.graphics.getHeight()+i*shipH*4;
-					// Gdx.graphics.getHeight() + i * shipH;
+					astsY[i] = Gdx.graphics.getHeight()+i*shipH*6;
 					Random r1 = new Random();
 					Random r2 = new Random();
 					Random r3 = new Random();
@@ -318,7 +303,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 
 
 			}
-			c_ship.set(shipX + shipW / 2, shipY + shipH / 2, shipW / 2);
+			c_ship.set(shipX + shipW / 2, shipY + shipH / 2, shipW / 4);
 			//shape.begin(ShapeRenderer.ShapeType.Filled);
 			for (int i = 0; i < nAst; i++) {
 
@@ -346,15 +331,7 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 					flag = true;
 
 				}
-				/*
-				if (Gdx.input.justTouched()){
-					batch.draw(missile, shipX, missileY, shipW, shipH);
-					if (missileY < astY){
-						missileY--;
-					}
 
-
-				}*/
 
 			}
 			//shape.end();
@@ -395,28 +372,10 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 					Gdx.graphics.getWidth()/25 , Gdx.graphics.getHeight()/2+Gdx.graphics.getHeight()/4);
 
 
-			//stage.addActor(backButton);
-			//instrButton.remove();
-			//gameButton.remove();
-			//stage.draw();
-			//backButton.draw(batch, 0);
 
-			/*backButton.addListener(new EventListener() {
-				@Override
-				public boolean handle(Event event) {
-					stars.dispose();
-					currentScreen = Screen.TITLE;
-					//go back to main menu
-					return false;
-				}
-			});*/
 			if (Gdx.input.justTouched()){{
 				stars1.dispose();
 				instrFont.dispose();
-				//backButton.remove();
-				//stage.addActor(gameButton);
-				//stage.addActor(instrButton);
-				//stage.draw();
 				currentScreen = Screen.TITLE;
 			}}
 
@@ -466,10 +425,6 @@ public class Asteroid_Destroyer extends ApplicationAdapter {
 			}
 		}
 	}
-
-
-
-
 
 
 }
